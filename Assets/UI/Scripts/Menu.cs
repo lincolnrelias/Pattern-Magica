@@ -14,6 +14,10 @@ public class Menu : MonoBehaviour
     GameObject editPanel;
     [SerializeField]
     AudioClip btnClickSound;
+    [SerializeField]
+    GameObject castleContainer;
+    [SerializeField]
+    GameObject spaceContainer;
     AudioSource audioSource;
     [SerializeField]
     AudioSource musicAs;
@@ -54,6 +58,16 @@ public class Menu : MonoBehaviour
         if(!PlayerPrefs.HasKey("MostrarIndicadores")){
             PlayerPrefs.SetInt("MostrarIndicadores",1);
         }
+        if(!PlayerPrefs.HasKey("GameTypeIndex")){
+            changeThemeToCastle();
+        }else{
+            if(PlayerPrefs.GetInt("GameTypeIndex")==1){
+                changeThemeToCastle();
+            }else{
+                changeThemeToSpace();
+            }
+        }
+        
     }
     void checkDificulties(){
         string saveDirectory = Path.Combine(Application.persistentDataPath, "PadroesPatternMagic");
@@ -199,7 +213,17 @@ public class Menu : MonoBehaviour
         audioSource.Play();
     }
    public void IniciarJogo(){
-        SceneManager.LoadScene("Main",LoadSceneMode.Single);
+        SceneManager.LoadScene(PlayerPrefs.GetInt("GameTypeIndex"),LoadSceneMode.Single);
+    }
+    public void changeThemeToCastle(){
+        PlayerPrefs.SetInt("GameTypeIndex",1);
+        spaceContainer.SetActive(false);
+        castleContainer.SetActive(true);
+    }
+    public void changeThemeToSpace(){
+        PlayerPrefs.SetInt("GameTypeIndex",2);
+        spaceContainer.SetActive(true);
+        castleContainer.SetActive(false);
     }
     public void FecharJogo(){
         Application.Quit();

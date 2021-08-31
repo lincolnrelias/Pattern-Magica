@@ -11,7 +11,8 @@ public class EnemySpawner : MonoBehaviour
     // Start is called before the first frame update
    public void SpawnEnemy(){
        Vector3 pos = spawnPoints[Random.Range(0,spawnPoints.Length)].position;
-       int enemyPos = Random.Range(0,2);
+       int enemyPos = Random.Range(0,enemies.Length);
        GameObject enemy = Instantiate(enemies[enemyPos],pos,Quaternion.identity);
+       print(enemyPos+" "+(enemies.Length-1));
    }
 }

@@ -104,6 +104,11 @@ public class Pattern : MonoBehaviour
     public void errorAdd(int btnIndex){
         if(InErrorInterval() || playing || currentNode<1){return;};
         lastErrorTime = Time.time;
+        Enemy curEnemy = FindObjectOfType<Enemy>();
+        if(curEnemy){
+        curEnemy.canAttack=false;
+        curEnemy.canMove=false;
+        }
         parAcertosEErros.Add(new KeyTime("Erro",btnIndex,Time.time-lastErrorTime,distanceToEnemy()));
         lastWasError=true;
         Button btnCurr;
@@ -248,6 +253,11 @@ public class Pattern : MonoBehaviour
     IEnumerator iterateTroughPoints(){
         playing=true;
         patternExample pattern = transform.GetChild(0).GetComponent<patternExample>();
+        Enemy curEnemy = FindObjectOfType<Enemy>();
+        if(curEnemy){
+        curEnemy.canAttack=false;
+        curEnemy.canMove=false;
+        }
         
         while(exampleIndex<transform.childCount){
             if(exampleIndex>1){
@@ -266,8 +276,9 @@ public class Pattern : MonoBehaviour
         yield return new WaitForSecondsRealtime(interval);
         if(!lastWasError){
           enemySpawner.SpawnEnemy();  
-        }else{
-           FindObjectOfType<Enemy>().canMove=true;
+        }else if(curEnemy){
+           curEnemy.canAttack=true;
+            curEnemy.canMove=true;
         }
         if(PlayerPrefs.GetInt("MostrarNumeroMandalas")==1){
                 hideButtonNumbers();

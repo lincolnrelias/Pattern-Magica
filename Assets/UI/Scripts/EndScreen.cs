@@ -68,9 +68,9 @@ public class EndScreen : MonoBehaviour
         GetComponent<AudioSource>().PlayOneShot(startSound);
     }
     public void RestartGame(){
-        SceneManager.UnloadSceneAsync("Main");
+        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
         Time.timeScale=1;
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         
     }
     public IEnumerator NextLevel(){
@@ -118,7 +118,7 @@ public class EndScreen : MonoBehaviour
     public void Menu(){
         
         webcam.stop();
-        SceneManager.UnloadSceneAsync("Main");
+        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
         Time.timeScale=1;
         SceneManager.LoadScene("Menu");
     }

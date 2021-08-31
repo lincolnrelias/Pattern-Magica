@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     
     [SerializeField]AudioClip[] footstepSounds;
     [SerializeField]AudioClip[] attackSounds;
+    [SerializeField]float hitVolume = 0.3f;
         [SerializeField]
     AudioClip[] deathSounds;
     [SerializeField]
@@ -21,6 +22,7 @@ public class Enemy : MonoBehaviour
     float lastHittime=0;
     public bool canAttack=true;
     public bool canMove=true;
+    bool attacking=false;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,24 +31,30 @@ public class Enemy : MonoBehaviour
         castleHealth = FindObjectOfType<CastleHealth>();
         hittingPoint = FindObjectOfType<hittingPoint>().transform;
     }
-
     // Update is called once per frame
     void Update()
     {
         if(dead)return;
         transform.LookAt(hittingPoint.position);
-        
-        if(canAttack && transform.position==hittingPoint.position){
-        enemyAnimator.SetBool("Running",false);
-        enemyAnimator.SetBool("isAttacking",true);
-        }else{
-            enemyAnimator.SetBool("isAttacking",false);
-        }
-        if(!canMove){
-            enemyAnimator.SetBool("Running",false);
-        }else{
+        if(canMove){
             enemyAnimator.SetBool("Running",true);
             transform.position = Vector3.MoveTowards(transform.position, hittingPoint.position, speed * Time.deltaTime);
+        }else{
+            enemyAnimator.SetBool("Running",false);
+        }
+        if(canAttack && transform.position==hittingPoint.position){
+            enemyAnimator.SetBool("Running",false);
+            enemyAnimator.SetBool("isAttacking",true);
+            attacking=true;
+        }else{
+            enemyAnimator.SetBool("isAttacking",false);
+            attacking=false;
+        }
+        if(attacking){
+            if(!canAttack){
+                enemyAnimator.SetBool("Running",false);
+                enemyAnimator.SetBool("isAttacking",true);
+            }
         }
     }
     public void Die(){
@@ -62,7 +70,7 @@ public class Enemy : MonoBehaviour
     void Hit(){
     castleHealth.TakeDamage(damage);
     enemyAudioSrc.clip=attackSounds[0];
-    enemyAudioSrc.volume = 0.3f;
+    enemyAudioSrc.volume = hitVolume;
     enemyAudioSrc.Play();
     lastHittime=Time.time;
     }
